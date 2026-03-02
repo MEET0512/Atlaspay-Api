@@ -20,11 +20,11 @@ public class UserRegistrationDTO {
 
     @NotBlank(message = "First name is required.")
     @Size(min = 2, max = 100, message = "First name must be between 2 and 100 characters.")
-    private String first_name;
+    private String firstName;
 
     @NotBlank(message = "Last name is required.")
     @Size(min = 2, max = 100, message = "Last name must be between 2 and 100 characters.")
-    private String last_name;
+    private String lastName;
 
     @NotBlank(message = "Email is required.")
     @Email(message = "Email should be valid.")
@@ -32,7 +32,7 @@ public class UserRegistrationDTO {
 
     @NotBlank(message = "Phone number is required.")
     @Pattern(regexp = "^[+]?[0-9]{10,15}$", message = "Phone number must be valid (10-15 digits)")
-    private String phone_no;
+    private String phone;
 
     @NotBlank(message = "Password is required.")
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$",
@@ -40,7 +40,7 @@ public class UserRegistrationDTO {
     private String password;
 
     @NotBlank(message = "Confirm password in required.")
-    private String confirm_password;
+    private String confirmPassword;
 
     private String address;
 
@@ -48,7 +48,7 @@ public class UserRegistrationDTO {
 
     private String state;
 
-    private String zip_code;
+    private String zipCode;
 
     private String country;
 }

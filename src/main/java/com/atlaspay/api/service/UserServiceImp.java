@@ -48,13 +48,13 @@ public class UserServiceImp implements UserService {
         User user = userRepo.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
 
-        user.setFirst_name(userDTO.getFirstName());
-        user.setLast_name(userDTO.getLastName());
+        user.setFirstName(userDTO.getFirstName());
+        user.setLastName(userDTO.getLastName());
         user.setPhone(userDTO.getPhone());
         user.setAddress(userDTO.getAddress());
         user.setCity(userDTO.getCity());
         user.setState(userDTO.getState());
-        user.setZip_code(userDTO.getZipCode());
+        user.setZipCode(userDTO.getZipCode());
         user.setCountry(userDTO.getCountry());
 
         User updatedUser = userRepo.save(user);
@@ -82,18 +82,18 @@ public class UserServiceImp implements UserService {
 
     private UserResponseDTO mapToDTO(User user) {
         return UserResponseDTO.builder()
-                .userId(user.getUser_id())
-                .firstName(user.getFirst_name())
-                .lastName(user.getLast_name())
+                .userId(user.getUserId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getAddress())
                 .city(user.getCity())
                 .state(user.getState())
-                .zipCode(user.getZip_code())
+                .zipCode(user.getZipCode())
                 .country(user.getCountry())
                 .status(String.valueOf(user.getStatus()))
-                .createdAt(user.getCreated_at())
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 }

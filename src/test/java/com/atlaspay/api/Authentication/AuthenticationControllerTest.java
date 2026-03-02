@@ -2,7 +2,6 @@ package com.atlaspay.api.Authentication;
 
 import com.atlaspay.api.AtlaspayApplication;
 import com.atlaspay.api.config.SecurityConfig;
-import com.atlaspay.api.controller.AuthController;
 import com.atlaspay.api.dto.*;
 import com.atlaspay.api.exception.DuplicateResourceException;
 import com.atlaspay.api.exception.InvalidCredentialsException;
@@ -11,10 +10,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
@@ -31,10 +29,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest(classes = AtlaspayApplication.class)
+@SpringBootTest
 @Import(SecurityConfig.class)
 @DisplayName("AuthController Tests")
-public class AuthenticationController {
+@AutoConfigureMockMvc
+public class AuthenticationControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -54,16 +53,16 @@ public class AuthenticationController {
     void setUp() {
         // Setup valid registration DTO
         validRegistrationDTO = UserRegistrationDTO.builder()
-                .first_name("John")
-                .last_name("Doe")
+                .firstName("John")
+                .lastName("Doe")
                 .email("john.doe@example.com")
-                .phone_no("+1234567890")
+                .phone("+1234567890")
                 .password("SecurePassword123!")
-                .confirm_password("SecurePassword123!")
+                .confirmPassword("SecurePassword123!")
                 .address("123 Main Street")
                 .city("New York")
                 .state("NY")
-                .zip_code("10001")
+                .zipCode("10001")
                 .country("USA")
                 .build();
 
@@ -165,12 +164,12 @@ public class AuthenticationController {
     void testRegister_PasswordsMismatch() throws Exception {
         // Arrange
         UserRegistrationDTO invalidDTO = UserRegistrationDTO.builder()
-                .first_name("John")
-                .last_name("Doe")
+                .firstName("John")
+                .lastName("Doe")
                 .email("john.doe@example.com")
-                .phone_no("+1234567890")
+                .phone("+1234567890")
                 .password("SecurePassword123!")
-                .confirm_password("DifferentPassword123!")
+                .confirmPassword("DifferentPassword123!")
                 .build();
 
         when(authService.register(any(UserRegistrationDTO.class)))
@@ -191,12 +190,12 @@ public class AuthenticationController {
     void testRegister_MissingFirstName() throws Exception {
         // Arrange
         UserRegistrationDTO invalidDTO = UserRegistrationDTO.builder()
-                .first_name(null)
-                .last_name("Doe")
+                .firstName("")
+                .lastName("Doe")
                 .email("john.doe@example.com")
-                .phone_no("+1234567890")
+                .phone("+1234567890")
                 .password("SecurePassword123!")
-                .confirm_password("SecurePassword123!")
+                .confirmPassword("SecurePassword123!")
                 .build();
 
         // Act & Assert
@@ -216,12 +215,12 @@ public class AuthenticationController {
     void testRegister_InvalidEmailFormat() throws Exception {
         // Arrange
         UserRegistrationDTO invalidDTO = UserRegistrationDTO.builder()
-                .first_name("John")
-                .last_name("Doe")
+                .firstName("John")
+                .lastName("Doe")
                 .email("invalid-email")
-                .phone_no("+1234567890")
+                .phone("+1234567890")
                 .password("SecurePassword123!")
-                .confirm_password("SecurePassword123!")
+                .confirmPassword("SecurePassword123!")
                 .build();
 
         // Act & Assert
@@ -239,12 +238,12 @@ public class AuthenticationController {
     void testRegister_WeakPassword() throws Exception {
         // Arrange - Password without special character
         UserRegistrationDTO invalidDTO = UserRegistrationDTO.builder()
-                .first_name("John")
-                .last_name("Doe")
+                .firstName("John")
+                .lastName("Doe")
                 .email("john.doe@example.com")
-                .phone_no("+1234567890")
+                .phone("+1234567890")
                 .password("weak")
-                .confirm_password("weak")
+                .confirmPassword("weak")
                 .build();
 
         // Act & Assert
@@ -262,12 +261,12 @@ public class AuthenticationController {
     void testRegister_InvalidPhoneFormat() throws Exception {
         // Arrange
         UserRegistrationDTO invalidDTO = UserRegistrationDTO.builder()
-                .first_name("John")
-                .last_name("Doe")
+                .firstName("John")
+                .lastName("Doe")
                 .email("john.doe@example.com")
-                .phone_no("123")
+                .phone("123")
                 .password("SecurePassword123!")
-                .confirm_password("SecurePassword123!")
+                .confirmPassword("SecurePassword123!")
                 .build();
 
         // Act & Assert
@@ -439,7 +438,7 @@ public class AuthenticationController {
         // Assert - Check complete response structure
         String responseBody = result.getResponse().getContentAsString();
         ApiResponse<?> apiResponse = objectMapper.readValue(responseBody, ApiResponse.class);
-
+            System.out.println(apiResponse);
         assertThat(apiResponse.isSuccess()).isFalse();
         assertThat(apiResponse.getMessage()).isNotEmpty();
         assertThat(apiResponse.getErrorCode()).isNotEmpty();

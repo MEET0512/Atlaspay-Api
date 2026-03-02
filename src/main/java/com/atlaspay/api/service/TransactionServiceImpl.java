@@ -35,15 +35,15 @@ public class TransactionServiceImpl implements TransactionService{
 
         Transaction transaction = Transaction.builder()
                 .user(user)
-                .transaction_reference(UUID.randomUUID().toString())
-                .transaction_type(transactionType.valueOf(transactionDTO.getTransactionType()))
+                .transactionReference(UUID.randomUUID().toString())
+                .transactionType(transactionType.valueOf(transactionDTO.getTransactionType()))
                 .amount(transactionDTO.getAmount())
                 .status(transactionStatus.PENDING)
                 .description(transactionDTO.getDescription())
-                .recipient_account_number(transactionDTO.getRecipientAccountNumber())
-                .recipient_name(transactionDTO.getRecipientName())
+                .recipientAccountNumber(transactionDTO.getRecipientAccountNumber())
+                .recipientName(transactionDTO.getRecipientName())
                 .fee(transactionDTO.getFee())
-                .created_at(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         Transaction savedTransaction = transactionRepository.save(transaction);
@@ -62,7 +62,7 @@ public class TransactionServiceImpl implements TransactionService{
     @Override
     @Transactional(readOnly = true)
     public Page<TransactionDTO> getUserTransactions(Long userId, Pageable pageable) {
-        return transactionRepository.findByUserId(userId, pageable)
+        return transactionRepository.findByUserUserId(userId, pageable)
                 .map(this::mapToDTO);
     }
 
@@ -88,17 +88,17 @@ public class TransactionServiceImpl implements TransactionService{
 
     private TransactionDTO mapToDTO(Transaction transaction) {
         return TransactionDTO.builder()
-                .transactionId(transaction.getTransaction_id())
-                .userId(transaction.getUser().getUser_id())
-                .transactionReference(transaction.getTransaction_reference())
-                .transactionType(transaction.getTransaction_type().toString())
+                .transactionId(transaction.getTransactionId())
+                .userId(transaction.getUser().getUserId())
+                .transactionReference(transaction.getTransactionReference())
+                .transactionType(transaction.getTransactionType().toString())
                 .amount(transaction.getAmount())
                 .status(transaction.getStatus().toString())
                 .description(transaction.getDescription())
-                .recipientAccountNumber(transaction.getRecipient_account_number())
-                .recipientName(transaction.getRecipient_name())
+                .recipientAccountNumber(transaction.getRecipientAccountNumber())
+                .recipientName(transaction.getRecipientName())
                 .fee(transaction.getFee())
-                .createdAt(transaction.getCreated_at())
+                .createdAt(transaction.getCreatedAt())
                 .build();
     }
 }

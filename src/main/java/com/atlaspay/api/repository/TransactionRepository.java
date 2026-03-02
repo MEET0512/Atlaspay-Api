@@ -11,7 +11,7 @@ import java.util.Optional;
 @Repository
 public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 
-    Optional<Transaction> findByTransactionReference(String transactionReference);
+    Optional<Transaction> findByTransactionReference(String transaction_reference);
 
-    Page<Transaction> findByUserId(Long userId, Pageable pageable);
+    Page<Transaction> findByUserUserId(Long userId, Pageable pageable);
 }

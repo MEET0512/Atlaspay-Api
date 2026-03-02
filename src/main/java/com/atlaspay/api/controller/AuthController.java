@@ -7,12 +7,14 @@ import com.atlaspay.api.dto.UserRegistrationDTO;
 import com.atlaspay.api.service.AuthenticationService;
 import com.atlaspay.api.utils.ResponseUtil;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 public class AuthController {
 
@@ -29,7 +31,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<JWTresponseDTO>> register(
             @Valid @RequestBody UserRegistrationDTO registrationDTO) {
-
+        System.out.print(registrationDTO);
         JWTresponseDTO response = authenticationService.register(registrationDTO);
         return ResponseUtil.created("User registered successfully", response);
     }

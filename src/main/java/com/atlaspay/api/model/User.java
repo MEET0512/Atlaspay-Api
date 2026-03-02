@@ -15,19 +15,19 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name="Users", uniqueConstraints = {
         @UniqueConstraint(columnNames = "email"),
-        @UniqueConstraint(columnNames = "phone_no"),
+        @UniqueConstraint(columnNames = "phone"),
 })
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long user_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long userId;
 
     @Column(nullable = false, length = 100)
-    private String first_name;
+    private String firstName;
 
     @Column(nullable = false, length = 100)
-    private String last_name;
+    private String lastName;
 
     @Column(nullable = false, length = 100, unique = true)
     private String email;
@@ -48,13 +48,13 @@ public class User {
     private String state;
 
     @Column(length = 10)
-    private String zip_code;
+    private String zipCode;
 
     @Column(length = 100)
     private String country;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -62,7 +62,7 @@ public class User {
 
     @PrePersist
     protected void onCreate() {
-        created_at = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
 }
 

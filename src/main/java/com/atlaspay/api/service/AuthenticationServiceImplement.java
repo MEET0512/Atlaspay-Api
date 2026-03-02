@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 
+
 @Service
 @Transactional
 public class AuthenticationServiceImplement implements AuthenticationService {
@@ -45,29 +46,29 @@ public class AuthenticationServiceImplement implements AuthenticationService {
         }
 
         // Check if phone already exists
-        if (userRepository.existsByPhone(registrationDTO.getPhone_no())) {
+        if (userRepository.existsByPhone(registrationDTO.getPhone())) {
             throw new DuplicateResourceException("Phone number already registered");
         }
 
         // Validate passwords match
-        if (!registrationDTO.getPassword().equals(registrationDTO.getConfirm_password())) {
+        if (!registrationDTO.getPassword().equals(registrationDTO.getConfirmPassword())) {
             throw new InvalidCredentialsException("Passwords do not match");
         }
 
         // Create new user
-        User user = User.builder()
-                .first_name(registrationDTO.getFirst_name())
-                .last_name(registrationDTO.getLast_name())
+        User user =  User.builder()
+                .firstName(registrationDTO.getFirstName())
+                .lastName(registrationDTO.getLastName())
                 .email(registrationDTO.getEmail())
-                .phone(registrationDTO.getPhone_no())
+                .phone(registrationDTO.getPhone())
                 .password(passwordEncoder.encode(registrationDTO.getPassword()))
                 .address(registrationDTO.getAddress())
                 .city(registrationDTO.getCity())
                 .state(registrationDTO.getState())
-                .zip_code(registrationDTO.getZip_code())
+                .zipCode(registrationDTO.getZipCode())
                 .country(registrationDTO.getCountry())
                 .status(user_status.ACTIVE)
-                .created_at(LocalDateTime.now())
+                .createdAt(LocalDateTime.now())
                 .build();
 
         User savedUser = userRepository.save(user);
@@ -121,18 +122,18 @@ public class AuthenticationServiceImplement implements AuthenticationService {
 
     private UserResponseDTO mapToDTO(User user) {
         return UserResponseDTO.builder()
-                .userId(user.getUser_id())
-                .firstName(user.getFirst_name())
-                .lastName(user.getLast_name())
+                .userId(user.getUserId())
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
                 .email(user.getEmail())
                 .phone(user.getPhone())
                 .address(user.getAddress())
                 .city(user.getCity())
                 .state(user.getState())
-                .zipCode(user.getZip_code())
+                .zipCode(user.getZipCode())
                 .country(user.getCountry())
                 .status(String.valueOf(user.getStatus()))
-                .createdAt(user.getCreated_at())
+                .createdAt(user.getCreatedAt())
                 .build();
     }
 }

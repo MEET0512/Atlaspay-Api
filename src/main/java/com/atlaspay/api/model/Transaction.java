@@ -18,15 +18,15 @@ import java.time.LocalDateTime;
 public class Transaction {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long transaction_id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long transactionId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "userId", nullable = false)
     private User user;
 
     @Column(nullable = false, unique = true, length = 50)
-    private String transaction_reference;
+    private String transactionReference;
 
     @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal amount;
@@ -35,20 +35,20 @@ public class Transaction {
     private String description;
 
     @Column(length = 100)
-    private String recipient_account_number;
+    private String recipientAccountNumber;
 
     @Column(length = 100)
-    private String recipient_name;
+    private String recipientName;
 
     @Column(precision = 19, scale = 2)
     private BigDecimal fee;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime createdAt;
 
     @PrePersist
     protected void onCreate() {
-        created_at = LocalDateTime.now();
+        createdAt = LocalDateTime.now();
     }
 
     @Enumerated(EnumType.STRING)
@@ -57,6 +57,6 @@ public class Transaction {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private transactionType transaction_type;
+    private transactionType transactionType;
 }
 

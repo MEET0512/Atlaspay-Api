@@ -3,12 +3,14 @@ package com.atlaspay.api.exception;
 import com.atlaspay.api.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +22,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ApiResponse<Object>> handleValidationExceptions(
+    public ResponseEntity<ApiResponse<Map<String, String>>> handleValidationExceptions(
             MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) -> {
@@ -29,11 +31,12 @@ public class GlobalExceptionHandler {
             errors.put(fieldName, errorMessage);
         });
 
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
+        ApiResponse<Map<String, String>> apiResponse = ApiResponse.<Map<String, String>>builder()
                 .success(false)
                 .message("Validation failed")
                 .errorCode("VALIDATION_ERROR")
                 .data(errors)
+                .timestamp(LocalDateTime.now())
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
@@ -44,9 +47,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<ApiResponse<Object>> handleResourceNotFoundException(
+    public ResponseEntity<ApiResponse<String>> handleResourceNotFoundException(
             ResourceNotFoundException ex) {
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
+        ApiResponse<String> apiResponse = ApiResponse.<String>builder()
                 .success(false)
                 .message(ex.getMessage())
                 .errorCode("RESOURCE_NOT_FOUND")
@@ -60,12 +63,13 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(InvalidCredentialsException.class)
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    public ResponseEntity<ApiResponse<Object>> handleInvalidCredentialsException(
+    public ResponseEntity<ApiResponse<String>> handleInvalidCredentialsException(
             InvalidCredentialsException ex) {
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
+        ApiResponse<String> apiResponse = ApiResponse.<String>builder()
                 .success(false)
                 .message(ex.getMessage())
                 .errorCode("INVALID_CREDENTIALS")
+                .timestamp(LocalDateTime.now())
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
@@ -76,9 +80,9 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(DuplicateResourceException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ResponseEntity<ApiResponse<Object>> handleDuplicateResourceException(
+    public ResponseEntity<ApiResponse<String>> handleDuplicateResourceException(
             DuplicateResourceException ex) {
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
+        ApiResponse<String> apiResponse = ApiResponse.<String>builder()
                 .success(false)
                 .message(ex.getMessage())
                 .errorCode("DUPLICATE_RESOURCE")
@@ -90,16 +94,30 @@ public class GlobalExceptionHandler {
     /**
      * Generic exception handler
      */
-    @ExceptionHandler(Exception.class)
+   /**@ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public ResponseEntity<ApiResponse<Object>> handleGlobalException(
+    public ResponseEntity<ApiResponse<String>> handleGlobalException(
             Exception ex) {
-        ApiResponse<Object> apiResponse = ApiResponse.builder()
+        ApiResponse<String> apiResponse = ApiResponse.<String>builder()
                 .success(false)
                 .message("An unexpected error occurred")
                 .errorCode("INTERNAL_SERVER_ERROR")
                 .build();
 
         return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+    }*/
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ApiResponse<String>> handleInvalidJson(HttpMessageNotReadableException ex) {
+
+        ApiResponse<String> response = ApiResponse.<String>builder()
+                .success(false)
+                .message("Malformed or missing JSON request body")
+                .errorCode("INVALID_REQUEST")
+                .data(null)
+                .timestamp(LocalDateTime.now())
+                .build();
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 }

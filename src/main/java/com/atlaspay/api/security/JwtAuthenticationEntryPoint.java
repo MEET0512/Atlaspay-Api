@@ -1,16 +1,18 @@
 package com.atlaspay.api.security;
 
 import com.atlaspay.api.dto.ApiResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
-import tools.jackson.databind.ObjectMapper;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 
+@Component
 public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     /**
@@ -22,10 +24,10 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 
         ApiResponse<Object> apiResponse = ApiResponse.builder()
-                .success(false)
-                .message("Unauthorized: " + authException.getMessage())
-                .errorCode("UNAUTHORIZED")
-                .build();
+                                                    .success(false)
+                                                    .message("Unauthorized: " + authException.getMessage())
+                                                    .errorCode("UNAUTHORIZED")
+                                                    .build();
 
         ObjectMapper objectMapper = new ObjectMapper();
         response.getWriter().write(objectMapper.writeValueAsString(apiResponse));
